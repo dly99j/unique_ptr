@@ -82,6 +82,32 @@ namespace mstl {
             std::is_move_constructible_v<Deleter> &&
             std::is_reference_v<Deleter>;
 
+        template<class U, class V>
+        constexpr unique_ptr( unique_ptr<U, V>&& ) noexcept
+        requires
+            std::is_move_constructible_v<Deleter> &&
+            (!std::is_reference_v<Deleter>) &&
+            std::is_nothrow_convertible_v<typename unique_ptr<U, V>::pointer, typename unique_ptr<T, Deleter>::pointer> &&
+            (!std::is_array_v<U>) &&
+            ( (std::is_reference_v<Deleter> && std::is_same_v<Deleter, V>) ||
+              ( (!std::is_reference_v<Deleter>) && std::is_convertible_v<Deleter, V>) );
+
+        constexpr ~unique_ptr() noexcept;
+
+        constexpr pointer get() noexcept;
+
+        constexpr deleter_type& get_deleter() noexcept;
+
+        constexpr explicit operator bool() noexcept;
+
+        constexpr typename std::add_lvalue_reference<T>::type operator*() const
+            noexcept(noexcept(*std::declval<pointer>()));
+
+        constexpr pointer operator->() const noexcept;
+
+        T& operator[]( std::size_t i ) const = delete; //will do array specialisation
+
+
     private:
         T* m_data;
         Deleter m_deleter;
