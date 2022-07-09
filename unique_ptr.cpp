@@ -102,18 +102,6 @@ namespace mstl {
         other.m_data = nullptr;
     }
 
-    /*
-     * template<class U, class V>
-        constexpr unique_ptr( unique_ptr<U, V>&& ) noexcept
-        requires
-            std::is_move_constructible_v<Deleter> &&
-            (!std::is_reference_v<Deleter>) &&
-            std::is_nothrow_convertible_v<typename unique_ptr<U, V>::pointer, typename unique_ptr<T, Deleter>::pointer> &&
-            (!std::is_array_v<U>) &&
-            ( (std::is_reference_v<Deleter> && std::is_same_v<Deleter, V>) ||
-              ( (!std::is_reference_v<Deleter>) && std::is_convertible_v<Deleter, V>) );
-     */
-
     template<class T, class Deleter>
     constexpr
     unique_ptr<T, Deleter>::~unique_ptr() noexcept {
